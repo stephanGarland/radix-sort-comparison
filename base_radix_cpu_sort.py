@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# Modified from Manish Bhojasia's implmentation
+# https://www.sanfoundry.com/python-program-implement-radix-sort/
 
 import sys
 import textwrap
@@ -7,7 +9,6 @@ import timeit
 count = 10
 range_size = 1000000
 
-# Modified from Manish Bhojasia's implmentation
 def radix_sort(int_array, base=10):
     def key_factory(digit, base):
         def key(int_array, index):
