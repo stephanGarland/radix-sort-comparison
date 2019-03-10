@@ -1,5 +1,5 @@
 # radix-sort-comparison
-Usage: ./radix-sort-comparison.py $input_file
+*Usage: ./radix-sort-comparison.py $input_file*
 
 Note that the purposes of timing, the file currently has the 'count' and 'range' variables set for 10^7 ints. This may be changed in the future to read inputs from sys.argv, as using an array size other than that included would throw off the calcs.
 
