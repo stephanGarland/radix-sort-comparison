@@ -1,8 +1,18 @@
-# radix-sort-comparison
-*Usage: ./radix-sort-comparison.py $input_file*
+# Radix Sort
+The purpose of this project is to run radix sort a standalone Nvidia GPU, multiple-GPU AWS instance, Raspberry Pi, Linux, macOS and Windows, and to then analyze the timing data cross the platforms.
 
-Note that the purposes of timing, the file currently has the 'count' and 'range' variables set for 10^7 ints. This may be changed in the future to read inputs from sys.argv, as using an array size other than that included would throw off the calcs.
+## Python 3 Implementation
+*Usage: ./radix_sort_revised.py <input_file>*
 
-Code is modified from [Manish Bhojasia](https://www.sanfoundry.com/python-program-implement-radix-sort/)
+## C++11 Implementation
+*Usage: ./radix_sort <input_file>*
+To compile: `g++ -std=c++11 -o radix_sort radix_sort.cpp`
 
-The intent is to perform timing of a radix sort on various platforms, such as a GPU, a multiple-GPU AWS instance, a Raspberry Pi, laptop, etc.
+## CUDA Implementation
+https://github.com/mark-poscablo/gpu-radix-sort
+
+Compiling on:
+- Windows 10 using nvcc
+
+Running on:
+- Nvidia GeForce GTX 1070
