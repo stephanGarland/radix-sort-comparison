@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+
+<!-- Big thanks to https://www.hackerearth.com/practice/algorithms/sorting/radix-sort/visualize/ -->
+
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta charset="utf-8">
+    <script src="https://cdn.polyfill.io/v3/polyfill.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.4.0/jquery.min.js"></script>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.7.0/animate.min.css" rel="stylesheet">
+    <link href="styles.css" rel="stylesheet">
+    <title>Radix Sort Visualizer</title>
+</head>
+<body>
+	<div id = "title" class = "title wrapper">
+		<div id="iteration" class="box iteration">
+		0
+		</div>
+	</div>
+	<div class = "label wrapper">
+		<div>Iteration</div>
+	</div>
+    <div id="input_arr" class="wrapper">
+      <h3>Input</h3>
+      <div></div>
+      <div id="ip_0" class="box ip 0"></div>
+      <div id="ip_1" class="box ip 1"></div>
+      <div id="ip_2" class="box ip 2"></div>
+      <div id="ip_3" class="box ip 3"></div>
+      <div id="ip_4" class="box ip 4"></div>
+      <div id="ip_5" class="box ip 5"></div>
+      <div id="ip_6" class="box ip 6"></div>
+      <div id="ip_7" class="box ip 7"></div>
+    </div>
+    <div class="label wrapper">
+      <div></div>
+      <div></div>
+      <div>0</div>
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+      <div>4</div>
+      <div>5</div>
+      <div>6</div>
+      <div>7</div>
+    </div>
+    <p>
+      <div id="count_arr" class="wrapper">
+      <h3>Count</h3>
+      <div id="cnt_0" class="box count 0">0</div>
+      <div id="cnt_1" class="box count 1">0</div>
+      <div id="cnt_2" class="box count 2">0</div>
+      <div id="cnt_3" class="box count 3">0</div>
+      <div id="cnt_4" class="box count 4">0</div>
+      <div id="cnt_5" class="box count 5">0</div>
+      <div id="cnt_6" class="box count 6">0</div>
+      <div id="cnt_7" class="box count 7">0</div>
+      <div id="cnt_8" class="box count 8">0</div>
+      <div id="cnt_9" class="box count 9">0</div>
+    </div>
+    <div class="label wrapper">
+      <div></div>
+      <div>0</div>
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+      <div>4</div>
+      <div>5</div>
+      <div>6</div>
+      <div>7</div>
+      <div>8</div>
+      <div>9</div>
+    </div>
+      <p>
+      <div id="aux_arr" class="wrapper">
+      <h3>Auxiliary</h3>
+       <div></div>
+      <div id="aux_0" class="box aux 0"></div>
+      <div id="aux_1" class="box aux 1"></div>
+      <div id="aux_2" class="box aux 2"></div>
+      <div id="aux_3" class="box aux 3"></div>
+      <div id="aux_4" class="box aux 4"></div>
+      <div id="aux_5" class="box aux 5"></div>
+      <div id="aux_6" class="box aux 6"></div>
+      <div id="aux_7" class="box aux 7"></div>
+    </div>
+    <div class="label wrapper">
+      <div></div>
+      <div></div>
+      <div>0</div>
+      <div>1</div>
+      <div>2</div>
+      <div>3</div>
+      <div>4</div>
+      <div>5</div>
+      <div>6</div>
+      <div>7</div>
+    </div>
+    <p>
+    <div id="op_arr" class="wrapper">
+    <h3>Output</h3>
+     <div></div>
+    <div id="op_0" class="box op 0">-</div>
+    <div id="op_1" class="box op 1">-</div>
+    <div id="op_2" class="box op 2">-</div>
+    <div id="op_3" class="box op 3">-</div>
+    <div id="op_4" class="box op 4">-</div>
+    <div id="op_5" class="box op 5">-</div>
+    <div id="op_6" class="box op 6">-</div>
+    <div id="op_7" class="box op 7">-</div>
+  </div>
+  <div class="label wrapper">
+    <div></div>
+    <div></div>
+    <div>0</div>
+    <div>1</div>
+    <div>2</div>
+    <div>3</div>
+    <div>4</div>
+    <div>5</div>
+    <div>6</div>
+    <div>7</div>
+  </div>
+
+    <button type="button" class="btn btn-primary" id="new_ints">New Ints</button>
+    <button type="button" class="btn btn-success" id="sort">Sort</button>
+    <button type="button" class="btn btn-warning" id="visualize">Visualize</button>
+	<button type="button" class="btn btn-warning" id="next">Next Step</button>
+    <p>
+    <form>
+        <div class="form-row">
+            <div class="col-1">
+              <label for="sleepTime">Sleep Time</label>
+			  <input type="range" min="250" max="3000" value="500" class="slider form-control" id="sleepTime">
+            </div>
+        </div>
+    </form>
+
+    <script type="application/javascript">
+    var current_unsorted_ints = [];
+	var canContinue = false;
+	var hasBegun = false;
+        function newInts() {
+            // Durstenfeld shuffle algorithm
+            function shuffleArray(array) {
+                for (let i = array.length - 1; i > 0; i--) {
+                    let j = Math.floor(Math.random() * (i + 1));
+                    let temp = array[i];
+                    array[i] = array[j];
+                    array[j] = temp;
+                }
+                return array;
+            }
+
+            let sorted_ints = Array.from(Array(100).keys()).filter(e => e >9);
+            let shuffled_ints = shuffleArray(sorted_ints);
+            let to_sort = shuffled_ints.slice(0,8);
+            current_unsorted_ints = to_sort;
+            return to_sort;
+        }
+
+        $(function() {
+            $('#new_ints').click(resetAll);
+        });
+
+        function resetAll() {
+
+			let visualize = document.getElementById("visualize");
+			let nextStep = document.getElementById("next");
+			let sort = document.getElementById("sort");
+			visualize.disabled = false;
+			sort.disabled = false;
+			nextStep.disabled = false;
+
+            $('#sleepTime').val(999);
+            const display_unsorted = newInts();
+            let input_boxes = document.getElementsByClassName("box ip");
+            let count_boxes = document.getElementsByClassName("box count");
+            let aux_boxes = document.getElementsByClassName("box aux");
+			let output_box = document.getElementsByClassName("box op");
+
+
+            let i = 0;
+            for (let box of input_boxes) {
+                box.innerHTML = display_unsorted[i];
+                i++;
+            }
+            for (let box of count_boxes) {
+                box.innerHTML = 0;
+            }
+            for (let box of aux_boxes) {
+                box.innerHTML = 0;
+            }
+			for (let box of output_box) {
+                box.innerHTML = "-";
+            }
+        }
+
+        $('#sort').click(function() {
+            // slice the global to copy by value
+            let temp = [...current_unsorted_ints];
+            let display_sorted = radixSort(temp);
+            let op_boxes = document.getElementsByClassName("box op");
+            let i = 0;
+            for (let box of op_boxes) {
+                box.innerHTML = display_sorted[i];
+                i++;
+            }
+        });
+
+        $('#visualize').click(function() {
+            visualizeRadixSort(current_unsorted_ints);
+        });
+		
+		$('#next').click(function() {
+			if(hasBegun == false){
+				hasBegun = true;
+				visualizeRadixSort(current_unsorted_ints, true);
+			} else {
+				canContinue = true;
+			}
+            
+        })
+
+        function sleep(ms) {
+            return new Promise(resolve => setTimeout(resolve, ms));
+        }
+
+        async function visualizeRadixSort(arr, pauseOnStep = false) {
+            let waitTime = $('#sleepTime').val();
+            $('#sleepTime').change(function() {
+                waitTime = $(this).val();
+            });
+            let count_boxes = document.getElementsByClassName("box count");
+            let input_boxes = document.getElementsByClassName("box ip");
+            let aux_boxes = document.getElementsByClassName("box aux");
+			let output_box = document.getElementsByClassName("box op");
+			let iteration_box = document.getElementsByClassName("box iteration");
+
+			let visualize = document.getElementById("visualize");
+			let sort = document.getElementById("sort");
+			let newInts = document.getElementById("new_ints");
+			let nextStep = document.getElementById("next");
+
+			visualize.disabled = true;
+			sort.disabled = true;
+			newInts.disabled = true;
+
+			iteration_box[0].classList.add("highlight");
+			iteration_box[0].innerHTML = 1;
+			iteration_box[0].classList.remove("highlight");
+
+            for (let num of input_boxes) {
+                let cur_num_lsd = num.innerHTML.split('')[1];
+                // Add up LSDs
+				num.classList.add("highlight");
+				let i = 0;
+                for (let box of count_boxes) {
+                    if ($(box).index() - 1 == parseInt(cur_num_lsd)) {
+                        $(box).addClass("highlight");
+                        box.innerHTML = parseInt(box.innerHTML) + 1;
+						//Pause on Step
+						if(pauseOnStep){
+							while(!canContinue){
+								await sleep(waitTime);
+							}
+							canContinue = false;
+						} else {
+							await sleep(waitTime);
+						}
+                        $(box).removeClass("highlight");
+                    }
+
+				}
+				num.classList.remove("highlight");
+
+            }
+
+            // Subtract one from [0] of count array, then iteratively add the rest
+			let j = 0;
+            count_boxes[0].innerHTML = parseInt(count_boxes[0].innerHTML) - 1;
+            for (j = 0; j < count_boxes.length; j++) {
+                count_boxes[j].classList.add("highlight");
+                if (j < 9) {
+                    count_boxes[j + 1].classList.add("highlight");
+                    count_boxes[j + 1].innerHTML = parseInt(count_boxes[j].innerHTML) + parseInt(count_boxes[j + 1].innerHTML)
+                }
+				//Pause on Step
+				if(pauseOnStep){
+					while(!canContinue){
+						await sleep(waitTime);
+					}
+					canContinue = false;
+				} else {
+					await sleep(waitTime);
+				}
+                $(".box").removeClass("highlight");
+            }
+
+            for (k = aux_boxes.length - 1; k >= 0; k--) {
+                input_boxes[k].classList.add("highlight");
+
+                let cur_num_lsd = arr[k].toString().split('')[1];
+                let aux_index = count_boxes[cur_num_lsd].innerHTML;
+                aux_boxes[aux_index].innerHTML = input_boxes[k].innerHTML;
+                count_boxes[cur_num_lsd].classList.add("highlight");
+                aux_boxes[aux_index].classList.add("highlight");
+				//Pause on Step
+				if(pauseOnStep){
+					while(!canContinue){
+						await sleep(waitTime);
+					}
+					canContinue = false;
+				} else {
+					await sleep(waitTime);
+				}
+                $(".box").removeClass("highlight");
+                count_boxes[cur_num_lsd].innerHTML = parseInt(count_boxes[cur_num_lsd].innerHTML) - 1;
+            }
+
+            /*****************************
+             At this point, you replace the input array with the contents of the
+             aux array, 0 out the aux array, and repeat the process once more
+             (n times, really, but I've limited the numbers to 2 digits, so you loop twice)
+            *****************************/
+
+			iteration_box[0].classList.add("highlight");
+			iteration_box[0].innerHTML = 2;
+			iteration_box[0].classList.remove("highlight");
+
+			for(i = 0; i < input_boxes.length; i++){
+				aux_boxes[i].classList.add("highlight");
+				input_boxes[i].classList.add("highlight");
+				input_boxes[i].innerHTML = aux_boxes[i].innerHTML;
+				aux_boxes[i].innerHTML = 0;
+				aux_boxes[i].classList.remove("highlight");
+				input_boxes[i].classList.remove("highlight");
+			}
+
+			for(var k = 0; k < count_boxes.length; k++){
+				count_boxes[k].innerHTML = 0;
+			}
+
+			for (let num of input_boxes) {
+				let cur_num_msd = num.innerHTML.split('')[0];
+                //let cur_num_lsd = num.toString().split('')[1];
+                // Add up LSDs
+				let i = 0;
+				num.classList.add("highlight");
+                for (let box of count_boxes) {
+
+                    if ($(box).index() - 1 == parseInt(cur_num_msd)) {
+						//input_boxes[i].classList.add("highlight");
+                        $(box).addClass("highlight");
+                        box.innerHTML = parseInt(box.innerHTML) + 1;
+						//Pause on Step
+						if(pauseOnStep){
+							while(!canContinue){
+								await sleep(waitTime);
+							}
+							canContinue = false;
+						} else {
+							await sleep(waitTime);
+						}
+                        $(box).removeClass("highlight");
+						//input_boxes[i].classList.remove("highlight");
+                        i++;
+                    }
+                }
+				num.classList.remove("highlight");
+            }
+
+
+
+			// Subtract one from [0] of count array, then iteratively add the rest
+			j = 0;
+            count_boxes[0].innerHTML = parseInt(count_boxes[0].innerHTML) - 1;
+            for (j = 0; j < count_boxes.length; j++) {
+                count_boxes[j].classList.add("highlight");
+                if (j < 9) {
+                    count_boxes[j + 1].classList.add("highlight");
+                    count_boxes[j + 1].innerHTML = parseInt(count_boxes[j].innerHTML) + parseInt(count_boxes[j + 1].innerHTML)
+                }
+				//Pause on Step
+				if(pauseOnStep){
+					while(!canContinue){
+						await sleep(waitTime);
+					}
+					canContinue = false;
+				} else {
+					await sleep(waitTime);
+				}
+                $(".box").removeClass("highlight");
+            }
+
+			for (k = aux_boxes.length - 1; k >= 0; k--) {
+                input_boxes[k].classList.add("highlight");
+
+                let cur_num_msd = input_boxes[k].innerHTML.split('')[0];
+				console.log("Index is" +  k + "MSD is " + cur_num_msd);
+                let aux_index = count_boxes[cur_num_msd].innerHTML;
+                aux_boxes[aux_index].innerHTML = input_boxes[k].innerHTML;
+                count_boxes[cur_num_msd].classList.add("highlight");
+                aux_boxes[aux_index].classList.add("highlight");
+				//Pause on Step
+				if(pauseOnStep){
+					while(!canContinue){
+						await sleep(waitTime);
+					}
+					canContinue = false;
+				} else {
+					await sleep(waitTime);
+				}
+                $(".box").removeClass("highlight");
+				aux_boxes[aux_index].classList.remove("highlight");
+                count_boxes[cur_num_msd].innerHTML = parseInt(count_boxes[cur_num_msd].innerHTML) - 1;
+            }
+
+			for(k = 0; k < aux_boxes.length; k++){
+				aux_boxes[k].classList.add("highlight");
+				output_box[k].classList.add("highlight");
+				output_box[k].innerHTML = aux_boxes[k].innerHTML;
+				output_box[k].classList.remove("highlight");
+				aux_boxes[k].classList.remove("highlight");
+			}
+
+			nextStep.disabled = true;
+			newInts.disabled = false;
+
+        }
+
+        function insert(arr, i, j) {
+            tmp = arr[i];
+            arr.splice(i, 1);
+            arr.splice(j, 0, tmp);
+        }
+
+        // transpiled version of https://github.com/thedufer/VisualSort
+        function radixSort(arr) {
+            var bit, end, i, mask;
+            bit = 0;
+            while(true)
+            {
+              mask = 1 << bit;
+              i = 0;
+              end = arr.length;
+              while(i < end)
+              {
+                  if(arr[i] & mask)
+                  {
+                      insert(arr, i, arr.length - 1);
+                      end--;
+                  }
+                  else
+                  {
+                      i++;
+                  }
+                }
+                bit++;
+                if(end === arr.length)
+                {
+                    break;
+                }
+            }
+            return arr;
+            }
+
+        resetAll();
+    </script>
+</body>
+</html>
